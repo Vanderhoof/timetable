@@ -110,19 +110,12 @@ npm run tauri:dev
 
 ---
 
-## Структура репозитория
-
-```
-/               — РШР (основной редактор расписания)
-workload/       — Редактор нагрузки (отдельное приложение)
-src-tauri/      — Tauri-конфигурация для десктоп-сборки РШР
-.github/
-  workflows/
-    release.yml — автосборка macOS + Windows + web при пуше тега v*
-```
-
----
-
 ## Лицензия
 
 MIT
+
+---
+
+<div align="center">
+  <sub>Создано с помощью <a href="https://claude.ai/code">Claude Code</a></sub>
+</div>
