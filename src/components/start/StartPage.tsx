@@ -129,7 +129,7 @@ export function StartPage() {
   const schedule = useScheduleStore((state) => state.schedule);
   const markSaved = useScheduleStore((state) => state.markSaved);
 
-  const hasData = Object.keys(teachers).length > 0;
+  const hasData = Object.keys(teachers).length > 0 || classes.length > 0 || requirements.length > 0;
 
   // Close unsaved changes modal
   const closeUnsavedModal = useCallback(() => {
