@@ -1,0 +1,116 @@
+import { describe, it, expect } from 'vitest';
+import { hoursPerClass, hoursPerTeacher, requiredHoursForClass, validateWorkload } from './validation';
+import type { CurriculumPlan, Assignment, HomeroomAssignment, RNTeacher } from '../types';
+
+const PLAN: CurriculumPlan = {
+  classNames: ['5а'],
+  grades: [
+    {
+      grade: 5,
+      subjects: [
+        { name: 'Математика', shortName: 'Мат', hoursPerClass: { '5а': 5 }, groupSplit: false, part: 'mandatory' as const },
+        { name: 'Физкультура', shortName: 'Физ-ра', hoursPerClass: { '5а': 3 }, groupSplit: true, part: 'mandatory' as const },
+      ],
+    },
+  ],
+};
+
+const TEACHER: RNTeacher = {
+  id: 't1',
+  name: 'Иванов Иван Иванович',
+  initials: 'И.И.',
+  subjects: ['Математика'],
+};
+
+function makeAssignment(overrides: Partial<Assignment> = {}): Assignment {
+  return {
+    teacherId: 't1',
+    className: '5а',
+    subject: 'Математика',
+    hoursPerWeek: 5,
+    ...overrides,
+  };
+}
+
+describe('hoursPerClass', () => {
+  it('sums hours per class correctly', () => {
+    const assignments: Assignment[] = [
+      makeAssignment({ className: '5а', hoursPerWeek: 5 }),
+      makeAssignment({ className: '5а', hoursPerWeek: 3 }),
+      makeAssignment({ className: '6б', hoursPerWeek: 4 }),
+    ];
+    const result = hoursPerClass(assignments);
+    expect(result['5а']).toBe(8);
+    expect(result['6б']).toBe(4);
+  });
+
+  it('returns empty object for no assignments', () => {
+    expect(hoursPerClass([])).toEqual({});
+  });
+});
+
+describe('hoursPerTeacher', () => {
+  it('sums hours per teacher', () => {
+    const assignments: Assignment[] = [
+      makeAssignment({ teacherId: 't1', hoursPerWeek: 5 }),
+      makeAssignment({ teacherId: 't1', className: '6а', hoursPerWeek: 4 }),
+      makeAssignment({ teacherId: 't2', hoursPerWeek: 6 }),
+    ];
+    const result = hoursPerTeacher(assignments);
+    expect(result['t1']).toBe(9);
+    expect(result['t2']).toBe(6);
+  });
+
+  it('does not count homeroom hours (paid separately, З7-2)', () => {
+    // homeroom parameter removed — З7-2: paid under a different budget line
+    const result = hoursPerTeacher([makeAssignment({ hoursPerWeek: 5 })]);
+    expect(result['t1']).toBe(5);
+  });
+});
+
+describe('requiredHoursForClass', () => {
+  it('sums all subject hours for a class', () => {
+    expect(requiredHoursForClass(PLAN, '5а')).toBe(8); // 5 math + 3 pe
+  });
+
+  it('returns 0 for class not in plan', () => {
+    expect(requiredHoursForClass(PLAN, '9г')).toBe(0);
+  });
+});
+
+describe('validateWorkload', () => {
+  it('returns no issues for valid assignment', () => {
+    const assignments: Assignment[] = [
+      makeAssignment({ subject: 'Математика', hoursPerWeek: 5 }),
+      makeAssignment({ subject: 'Физкультура', hoursPerWeek: 3 }),
+    ];
+    const homeroom: HomeroomAssignment[] = [{ className: '5а', teacherId: 't1' }];
+    const issues = validateWorkload(PLAN, [TEACHER], assignments, homeroom);
+    // Total: 5+3+1=9 < СанПиН 29, all subjects assigned
+    expect(issues.filter((i) => i.severity === 'error')).toHaveLength(0);
+    expect(issues.filter((i) => i.message.includes('не назначен'))).toHaveLength(0);
+  });
+
+  it('reports СанПиН error when class hours exceed limit', () => {
+    // Assign 30 hours to 5а (СанПиН max is 29)
+    const assignments: Assignment[] = Array.from({ length: 6 }, (_, i) =>
+      makeAssignment({ subject: `Предмет${i}`, hoursPerWeek: 5 }),
+    );
+    const issues = validateWorkload(PLAN, [TEACHER], assignments, []);
+    expect(issues.some((i) => i.severity === 'error' && i.target === '5а')).toBe(true);
+  });
+
+  it('reports warning for unassigned subject', () => {
+    const issues = validateWorkload(PLAN, [TEACHER], [], []);
+    const unassigned = issues.filter((i) => i.message.includes('не назначен'));
+    expect(unassigned).toHaveLength(2); // Математика + Физкультура
+  });
+
+  it('reports error when teacher exceeds 34h', () => {
+    const assignments: Assignment[] = Array.from({ length: 8 }, (_, i) =>
+      makeAssignment({ subject: `Предмет${i}`, className: `${i + 5}а`, hoursPerWeek: 5 }),
+    );
+    const issues = validateWorkload(PLAN, [TEACHER], assignments, []);
+    expect(issues.some((i) => i.severity === 'error' && i.target === TEACHER.name)).toBe(true);
+  });
+});

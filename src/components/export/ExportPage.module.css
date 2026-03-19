@@ -1,0 +1,387 @@
+/**
+ * ExportPage styles - Grid view only
+ */
+
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-page);
+  overflow: auto;
+}
+
+.empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  gap: var(--spacing-sm);
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.tab {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab:hover {
+  background: var(--color-gray-100);
+  color: var(--color-text-primary);
+}
+
+.tabActive {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.tabActive:hover {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.pageTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.content {
+  flex: 1;
+}
+
+/* Grid view */
+.gridView {
+  overflow-x: scroll;
+  overflow-y: auto;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  max-height: calc(100vh - 160px);
+}
+
+/* Force visible scrollbar on macOS (where overlay scrollbars auto-hide) */
+.gridView::-webkit-scrollbar {
+  height: 14px;
+  width: 14px;
+}
+
+.gridView::-webkit-scrollbar-track {
+  background: var(--color-gray-200);
+  border-radius: 7px;
+}
+
+.gridView::-webkit-scrollbar-thumb {
+  background: var(--color-gray-500);
+  border-radius: 7px;
+  border: 2px solid var(--color-gray-200);
+}
+
+.gridView::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-600);
+}
+
+/* Firefox */
+.gridView {
+  scrollbar-width: auto;
+  scrollbar-color: var(--color-gray-500) var(--color-gray-200);
+}
+
+.gridTable {
+  --day-col-width: 36px;
+  table-layout: auto;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.gridTable th,
+.gridTable td {
+  border: 1px solid var(--color-gray-300);
+  padding: 2px 4px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.gridCorner {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-xs);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.gridCorner:first-child {
+  left: 0;
+  z-index: 4;
+  width: var(--day-col-width);
+}
+
+.gridCorner:nth-child(2) {
+  left: var(--day-col-width);
+  z-index: 4;
+}
+
+.gridClassHeader {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-xs);
+  min-width: 80px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.gridDayCell {
+  background: var(--color-gray-200);
+  font-weight: var(--font-weight-bold);
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  padding: var(--spacing-sm);
+  width: var(--day-col-width);
+  cursor: cell;
+  user-select: none;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.gridLessonNum {
+  background: var(--color-gray-100);
+  font-weight: var(--font-weight-bold);
+  min-width: 30px;
+  cursor: cell;
+  user-select: none;
+  position: sticky;
+  left: var(--day-col-width);
+  z-index: 1;
+}
+
+.gridCell {
+  white-space: nowrap;
+  min-height: 20px;
+  vertical-align: top;
+  cursor: cell;
+  user-select: none;
+}
+
+/* Bold border after each day's last lesson */
+.dayLastRow td {
+  border-bottom: 3px solid var(--color-gray-400);
+}
+
+.lessonEntry {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: 4px;
+  padding: 2px;
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.lessonEntry + .lessonEntry {
+  border-top: 1px dashed var(--color-gray-300);
+  margin-top: 2px;
+  padding-top: 2px;
+}
+
+.subject {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.teacher {
+  color: var(--color-text-secondary);
+}
+
+.className {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.group {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  margin-right: 4px;
+}
+
+.room {
+  color: var(--color-primary);
+}
+
+.dayFilter {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+/* Changed cell highlighting (diff from template) */
+.changedCell {
+  background: #ffff00 !important;
+}
+
+/* Teacher change list (Z9-4) */
+.teacherChangeList {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+}
+
+.teacherChangeEntry {
+  padding: var(--spacing-sm) 0;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.teacherChangeEntry:last-child {
+  border-bottom: none;
+}
+
+.teacherChangeName {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Split button for Telegram download with folder picker */
+.splitButton {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.splitButton > button:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.splitChevron {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  border-left: none;
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+.splitChevron:hover {
+  background: var(--color-gray-200);
+}
+
+.splitMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  min-width: 220px;
+  overflow: hidden;
+}
+
+.splitMenu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.splitMenu button:hover {
+  background: var(--color-gray-100);
+}
+
+.cancelledChange {
+  color: var(--color-error, #d32f2f);
+}
+
+.cancelledLabel {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.02em;
+}
+
+/* Selection highlighting for grid copy */
+.selected {
+  background: var(--color-cell-selected) !important;
+  outline: 1px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
+.gridLegend {
+  padding: 4px 8px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.substitutionMark {
+  color: var(--color-text-secondary);
+}
+
+/* Print styles */
+@media print {
+  .controls {
+    display: none;
+  }
+
+  .page {
+    padding: 0;
+    background: white;
+  }
+
+  .gridView {
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,136 @@
+/**
+ * EditorPage styles
+ */
+
+.page {
+  display: flex;
+  gap: var(--spacing-lg);
+  height: 100%;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-page);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex-shrink: 0;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-width: 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.gridHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.versionInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-base);
+}
+
+.versionType {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.weekRange {
+  font-weight: var(--font-weight-normal);
+  text-transform: none;
+}
+
+.versionName {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.versionNameButton {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 2px 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.versionNameButton:hover {
+  background: var(--color-bg-card);
+  border-color: var(--color-gray-300);
+}
+
+.versionNameInput {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: 2px 4px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  min-width: 200px;
+}
+
+.versionNameInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.className {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  background: var(--color-bg-card);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex-shrink: 0;
+}

@@ -1,0 +1,105 @@
+/**
+ * NewYearWizard styles
+ */
+
+.wizard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.steps {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+}
+
+.step {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border);
+}
+
+.stepActive {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+}
+
+.stepDone {
+  background: var(--color-success, #27ae60);
+  color: var(--color-text-inverse);
+  border-color: var(--color-success, #27ae60);
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.desc {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.archiveRow {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.yearInput {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.yearInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.warning {
+  margin: 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: #fff3cd;
+  border: 1px solid #ffe08a;
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  color: #664d03;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+}

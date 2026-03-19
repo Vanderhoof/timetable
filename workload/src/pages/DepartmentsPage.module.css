@@ -1,0 +1,267 @@
+.page { max-width: 800px; }
+.heading { margin: 0 0 8px; font-size: 20px; font-weight: 600; }
+.hint { font-size: 13px; color: #666; margin: 0 0 20px; }
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.input {
+  padding: 7px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 280px;
+  font-family: inherit;
+}
+.input:focus { outline: none; border-color: #1a1a2e; }
+
+.addBtn {
+  padding: 7px 16px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.addBtn:hover { background: #2a2a4e; }
+
+.error { color: #c0392b; font-size: 13px; }
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f8f8f8;
+}
+
+.toggle {
+  background: none;
+  border: none;
+  padding: 0 4px;
+  font-size: 14px;
+  color: #555;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.deptName {
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  background: transparent;
+  flex: 0 0 220px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.deptName:hover { background: #eee; }
+.deptName:focus { outline: 1px solid #1a1a2e; background: #fff; }
+
+.memberCount {
+  font-size: 13px;
+  color: #777;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: #999;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.deleteBtn:hover { background: #fee; color: #c0392b; }
+
+/* З6-10: department reorder buttons */
+.moveBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex-shrink: 0;
+}
+.moveBtn {
+  background: none;
+  border: none;
+  padding: 0 3px;
+  color: #bbb;
+  font-size: 10px;
+  line-height: 1.2;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.moveBtn:hover:not(:disabled) { background: #eee; color: #555; }
+.moveBtn:disabled { color: #ddd; cursor: default; }
+
+.teacherList {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.noTeachers { font-size: 13px; color: #999; margin: 0; }
+
+.teacherRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.teacherRow:hover { background: #f5f5ff; }
+
+.teacherName { font-size: 14px; flex: 1; }
+.teacherInitials { font-size: 13px; color: #888; }
+
+.addTeacherRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 2px;
+  flex-wrap: wrap;
+}
+
+.addTeacherInput {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  flex: 1;
+  min-width: 180px;
+}
+.addTeacherInput:focus { outline: none; border-color: #1a1a2e; }
+
+.addTeacherBtn {
+  padding: 5px 14px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.addTeacherBtn:hover { background: #2a2a4e; }
+
+.addTeacherError { font-size: 12px; color: #c0392b; width: 100%; padding-left: 6px; }
+
+.subjectSection {
+  border-top: 1px solid #eee;
+  padding: 10px 16px 12px;
+}
+
+.subjectSectionLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.subjectSectionHint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #aaa;
+}
+
+.subjectList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.subjectRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.subjectRow:hover { background: #f5f5ff; }
+
+/* ── З7-3: two-level group → table hierarchy ─────────────────────────────── */
+
+.groupBody {
+  padding: 8px 12px 12px;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tableCard {
+  border: 1px solid #e0e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.tableCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f4fa;
+}
+
+.tableName {
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  flex: 0 0 200px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.tableName:hover { background: #e0e8f8; }
+.tableName:focus { outline: 1px solid #1a1a2e; background: #fff; }
+
+.addTableRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px 2px;
+  flex-wrap: wrap;
+}
+
+.addTableBtn {
+  align-self: flex-start;
+  padding: 4px 12px;
+  background: transparent;
+  color: #1a1a2e;
+  border: 1px dashed #bbb;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-top: 2px;
+}
+.addTableBtn:hover { background: #f0f4fa; border-color: #1a1a2e; }

@@ -1,0 +1,199 @@
+/**
+ * GridCell styles
+ */
+
+.cell {
+  min-height: var(--grid-cell-min-height);
+  padding: var(--spacing-xs);
+  background: var(--color-cell-available);
+  border: 1px solid var(--color-gray-300);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  position: relative;
+}
+
+.cell:hover {
+  background: var(--color-gray-50);
+}
+
+.cell:focus {
+  outline: none;
+}
+
+.cell:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+
+/* Status colors */
+.statusSame {
+  background: var(--color-cell-same);
+}
+
+.statusSame:hover {
+  background: #90caf9;
+}
+
+.statusBanned {
+  background: var(--color-cell-banned);
+}
+
+.statusBanned:hover {
+  background: #ef9a9a;
+}
+
+.statusBusy {
+  background: var(--color-cell-teacher-busy);
+}
+
+.statusBusy:hover {
+  background: #ffcc80;
+}
+
+.statusOccupied {
+  background: var(--color-cell-occupied);
+}
+
+.statusOccupied:hover {
+  background: #fff8e1;
+}
+
+.statusPartnerBusy {
+  background: var(--color-cell-partner-busy);
+}
+
+.statusPartnerBusy:hover {
+  background: #b0bec5;
+}
+
+/* Partner conflict indicator — subtle outline on occupied cells where teacher is partner-busy */
+.partnerConflict {
+  outline: 2px solid #90a4ae;
+  outline-offset: -2px;
+}
+
+/* Selection states */
+.selected {
+  box-shadow: inset 0 0 0 3px var(--color-cell-selected);
+}
+
+.highlighted {
+  box-shadow: inset 0 0 0 2px var(--color-success);
+}
+
+.movableHighlighted {
+  background: #e1f5fe !important;
+  box-shadow: inset 0 0 0 3px #0288d1;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: inset 0 0 0 3px #0288d1;
+  }
+  50% {
+    box-shadow: inset 0 0 0 3px #0288d1, 0 0 8px rgba(2, 136, 209, 0.5);
+  }
+}
+
+.focused {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* Diff from template highlighting (yellow) */
+.differentFromTemplate {
+  background: #fff9c4 !important;
+}
+
+.differentFromTemplate:hover {
+  background: #fff59d !important;
+}
+
+/* Absent teacher marking (orange) */
+.absentMarked {
+  background: #ffcc80 !important;
+}
+
+.absentMarked:hover {
+  background: #ffb74d !important;
+}
+
+/* Lesson display - single line format */
+.lesson {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  padding: 2px var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+}
+
+.lesson + .lesson {
+  border-top: 1px dashed var(--color-gray-300);
+  margin-top: 2px;
+  padding-top: 2px;
+}
+
+.group {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xs);
+}
+
+.subject {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.teacher {
+  color: var(--color-text-secondary);
+}
+
+.room {
+  color: var(--color-primary);
+}
+
+.substitution {
+  color: var(--color-error);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Force-override indicator — "!" badge on lessons placed bypassing bans */
+.forceOverrideIndicator {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error);
+  line-height: 1;
+}
+
+/* Conflict hint */
+.conflictHint {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.conflictLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-style: normal;
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.conflictLink:hover {
+  color: var(--color-primary-dark);
+}
+

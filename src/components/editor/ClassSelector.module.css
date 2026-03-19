@@ -1,0 +1,97 @@
+/**
+ * ClassSelector styles
+ */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: var(--panel-width-sm);
+  background: var(--color-bg-card);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-base);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm);
+}
+
+.empty {
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.group {
+  margin-bottom: var(--spacing-xs);
+}
+
+.group:last-child {
+  margin-bottom: 0;
+}
+
+.classButtons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--spacing-xs);
+}
+
+.classButton {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-gray-100);
+  border: 1px solid transparent;
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.classButton:hover {
+  background: var(--color-gray-200);
+}
+
+.classButton.active {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.classButton:focus {
+  outline: none;
+}
+
+.classButton:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.classButton.hasRemaining {
+  border-color: #ffcc80;
+  background: #fff8e1;
+}
+
+.classButton.hasRemaining:hover {
+  background: #ffecb3;
+}
+
+.classButton.hasRemaining.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}

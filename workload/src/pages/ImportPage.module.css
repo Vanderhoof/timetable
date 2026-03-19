@@ -1,0 +1,507 @@
+.page {
+  max-width: 1200px;
+}
+
+.heading {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.dropzone {
+  border: 2px dashed #aaa;
+  border-radius: 10px;
+  padding: 48px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  background: #fafafa;
+  max-width: 480px;
+}
+
+.dropzone:hover {
+  border-color: #1a1a2e;
+  background: #f0f0f5;
+}
+
+.fileInput {
+  display: none;
+}
+
+.dropText {
+  font-size: 16px;
+  color: #333;
+  margin: 0 0 8px;
+}
+
+.dropHint {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.error {
+  color: #c0392b;
+  background: #fdecea;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.loaded {
+  margin-top: 4px;
+}
+
+.loadedInfo {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 10px;
+}
+
+.reloadBtn {
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.reloadBtn:hover {
+  background: #f0f0f0;
+}
+
+/* З11-4: Prominent draft banner at the top */
+.draftBanner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff8e1;
+  border: 2px solid #e67e22;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.draftBannerText {
+  flex: 1;
+  font-size: 14px;
+  color: #5d3e00;
+  font-weight: 500;
+}
+
+.draftBannerActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.confirmBtnPrimary {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #c0392b;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirmBtnPrimary:hover {
+  background: #a93226;
+}
+
+.draftNote {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 16px;
+  background: #fffbe6;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border-left: 3px solid #f0c040;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gradeBlock {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.gradeSummary {
+  padding: 10px 16px;
+  background: #f5f5f5;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.gradeSummary:hover {
+  background: #ececec;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  background: #f9f9f9;
+  padding: 7px 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #444;
+}
+
+.table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.shortNameInput {
+  width: 100px;
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.shortNameInput:focus {
+  outline: none;
+  border-color: #1a1a2e;
+}
+
+.centerCell {
+  text-align: center;
+}
+
+.hoursCell {
+  text-align: center;
+  color: #444;
+  min-width: 36px;
+  padding: 2px 4px;
+}
+
+.hoursInput {
+  width: 44px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #444;
+  background: transparent;
+}
+.hoursInput:focus {
+  outline: none;
+  border-color: #1a1a2e;
+  background: #fff;
+}
+/* hide number spinners */
+.hoursInput::-webkit-inner-spin-button,
+.hoursInput::-webkit-outer-spin-button { -webkit-appearance: none; }
+.hoursInput[type=number] { -moz-appearance: textfield; }
+
+.totalsRow td {
+  font-weight: 600;
+  background: #f8f8f8;
+  border-top: 2px solid #ddd;
+  padding: 5px 10px;
+}
+
+.totalsMismatch {
+  color: #c0392b !important;
+}
+
+.totalsExpected {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.deleteCellSubject {
+  width: 28px;
+  text-align: center;
+  padding: 0 2px;
+}
+
+.deleteSubjectBtn {
+  background: none;
+  border: none;
+  padding: 2px 5px;
+  border-radius: 3px;
+  color: #bbb;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 1;
+}
+.deleteSubjectBtn:hover { background: #fee; color: #c0392b; }
+
+.addSubjectRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+}
+
+.addSubjectInput {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: inherit;
+  width: 220px;
+}
+.addSubjectInput:focus { outline: none; border-color: #1a1a2e; }
+
+.addSubjectConfirm {
+  padding: 4px 12px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.addSubjectConfirm:hover { background: #2a2a4e; }
+
+.addSubjectCancel {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+.addSubjectCancel:hover { background: #f0f0f0; }
+
+.addSubjectError { font-size: 12px; color: #c0392b; }
+
+.addSubjectBtn {
+  background: none;
+  border: none;
+  padding: 5px 8px;
+  color: #1a1a2e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.addSubjectBtn:hover { opacity: 1; text-decoration: underline; }
+
+/* З7-1а: class add/delete controls */
+.classHeader {
+  text-align: center;
+  vertical-align: top;
+}
+.classHeaderControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 3px;
+}
+.groupCountSelect {
+  font-size: 11px;
+  padding: 1px 2px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #555;
+  background: #fff;
+  font-family: inherit;
+}
+.deleteClassBtn {
+  background: none;
+  border: none;
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #bbb;
+  font-size: 11px;
+  cursor: pointer;
+  line-height: 1;
+}
+.deleteClassBtn:hover { background: #fee; color: #c0392b; }
+
+/* З9-1б: copy class button in class header */
+.copyClassBtn {
+  background: none;
+  border: none;
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #bbb;
+  font-size: 11px;
+  cursor: pointer;
+  line-height: 1;
+}
+.copyClassBtn:hover { background: #e8f5e9; color: #2e7d32; }
+
+/* З9-1а: + Класс header cell and button */
+.addClassTh {
+  text-align: center;
+  min-width: 72px;
+}
+.addClassHeaderBtn {
+  background: none;
+  border: 1px dashed #bbb;
+  border-radius: 4px;
+  padding: 3px 8px;
+  color: #888;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.addClassHeaderBtn:hover { background: #f5f5ff; border-color: #1a1a2e; color: #1a1a2e; }
+
+/* З9-1б: label showing the source class in copy mode */
+.copyFromLabel {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.addClassRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-top: 1px solid #eee;
+  background: #fafafa;
+}
+.addClassInput {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: inherit;
+  width: 120px;
+}
+.addClassInput:focus { outline: none; border-color: #1a1a2e; }
+
+.addClassBtn {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  color: #1a1a2e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.7;
+  border-top: 1px solid #eee;
+  width: 100%;
+  text-align: left;
+}
+.addClassBtn:hover { opacity: 1; background: #f5f5ff; }
+
+/* MU-3: loaded section action buttons row */
+.loadedActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.exportUpBtn {
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid #1a1a2e;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a1a2e;
+  cursor: pointer;
+  font-weight: 600;
+}
+.exportUpBtn:hover { background: #f0f0ff; }
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancelBtn {
+  padding: 8px 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background: #f0f0f0;
+}
+
+.confirmBtn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirmBtn:hover {
+  background: #2a2a4e;
+}
+
+/* З11-1: "Часть" column */
+.partHeader {
+  text-align: center;
+  width: 52px;
+  min-width: 52px;
+  white-space: nowrap;
+}
+
+.partCell {
+  text-align: center;
+  font-size: 11px;
+  color: #777;
+  white-space: nowrap;
+}
+
+.partSelect {
+  font-size: 11px;
+  padding: 1px 2px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  width: 54px;
+}
+
+/* З11-1: section separator between mandatory and optional subjects */
+.sectionSeparator {
+  background: #f0f4ff;
+}
+
+.sectionSeparatorCell {
+  padding: 4px 10px !important;
+  font-size: 11px;
+  font-weight: 600;
+  color: #5566aa;
+  border-top: 1px solid #c8d4f0;
+  border-bottom: 1px solid #c8d4f0;
+}

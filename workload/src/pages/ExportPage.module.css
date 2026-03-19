@@ -1,0 +1,239 @@
+.page { max-width: 900px; }
+.heading { margin: 0 0 20px; font-size: 20px; font-weight: 600; }
+
+.errorBanner {
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #721c24;
+}
+.errorBanner ul { margin: 6px 0 0 0; padding-left: 20px; }
+
+.warnBanner {
+  background: #fff9e6;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #856404;
+}
+
+.summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summaryCard {
+  background: #f5f5ff;
+  border: 1px solid #dde;
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 120px;
+}
+
+.summaryNum { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+.summaryLabel { font-size: 12px; color: #666; margin-top: 4px; }
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.exportBtn {
+  padding: 10px 28px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.printBtn {
+  padding: 10px 24px;
+  background: #fff;
+  color: #1a1a2e;
+  border: 2px solid #1a1a2e;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.printBtn:hover:not(:disabled) { background: #f0f0ff; }
+.printBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.exportBtn:hover:not(:disabled) { background: #2a2a4e; }
+.exportBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.exportBtnWarn { background: #856404; }
+.exportBtnWarn:hover:not(:disabled) { background: #a07804; }
+
+.exportedNote { font-size: 13px; color: #27ae60; margin: 0 0 20px; }
+
+.preview { margin-top: 24px; }
+
+.previewTabs { display: flex; gap: 4px; margin-bottom: 12px; }
+
+.previewTab {
+  padding: 6px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f5f5f5;
+  font-size: 13px;
+}
+.previewTab:hover { background: #eee; }
+
+.previewTabActive {
+  padding: 6px 16px;
+  border: 1px solid #1a1a2e;
+  border-radius: 6px;
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tableWrap { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 2px solid #ddd;
+  background: #f9f9f9;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: #f8f8ff; }
+
+.numCell { text-align: center; color: #555; }
+
+/* MU-3: UP import section */
+.upImportSection {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0 16px;
+  background: #fafafa;
+}
+.upImportHeading { margin: 0 0 8px; font-size: 15px; font-weight: 600; color: #1a1a2e; }
+.upImportHint { font-size: 13px; color: #666; margin: 0 0 12px; }
+.upImportBtn {
+  padding: 7px 16px;
+  border: 1px solid #1a1a2e;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a1a2e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.upImportBtn:hover { background: #f0f0ff; }
+.upMsgOk { font-size: 13px; color: #1e8449; margin: 8px 0 0; }
+.upMsgErr { font-size: 13px; color: #c0392b; margin: 8px 0 0; }
+
+/* ── MU-1/MU-2: Обмен с кафедрами ───────────────────────────────────────── */
+.exchangeSection {
+  border: 1px solid #d0d8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0 16px;
+  background: #f5f7fb;
+}
+
+.exchangeHeading { margin: 0 0 14px; font-size: 15px; font-weight: 600; color: #1a1a2e; }
+
+.exchangeSubsection {
+  padding: 12px 0;
+  border-top: 1px solid #e0e6f0;
+}
+.exchangeSubsection:first-of-type { border-top: none; padding-top: 0; }
+
+.exchangeLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #555;
+  margin: 0 0 10px;
+}
+
+.exchangeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.groupSelect {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  min-width: 200px;
+  background: #fff;
+}
+.groupSelect:focus { outline: none; border-color: #1a1a2e; }
+
+.exchangeBtn {
+  padding: 6px 14px;
+  border: 1px solid #1a1a2e;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a1a2e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.exchangeBtn:hover:not(:disabled) { background: #f0f0ff; }
+.exchangeBtn:disabled { opacity: 0.45; cursor: default; }
+
+.exchangeMsgOk { font-size: 13px; color: #1e8449; margin: 8px 0 0; }
+.exchangeMsgErr { font-size: 13px; color: #c0392b; margin: 8px 0 0; }
+
+/* З11-8: folder hint for export buttons */
+.btnGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.folderHint {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.folderChangeBtn {
+  background: none;
+  border: none;
+  color: #1a1a2e;
+  font-size: 12px;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.folderChangeBtn:hover { color: #4444aa; }

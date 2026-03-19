@@ -1,0 +1,148 @@
+/**
+ * Shared styles for data tables
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: var(--spacing-md);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.search {
+  flex: 1;
+  max-width: 400px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-base);
+  border: var(--border);
+  border-radius: var(--radius-base);
+  background: var(--color-bg-card);
+}
+
+.search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.tableWrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--color-bg-card);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-size-base);
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-gray-100);
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  border-bottom: var(--border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-gray-100);
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background: var(--color-gray-50);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nameCell {
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.phoneCell {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.subjectsCell {
+  color: var(--color-text-secondary);
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bansCell {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  max-width: 200px;
+}
+
+.actionsColumn {
+  width: 80px;
+}
+
+.actionsCell {
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: flex-end;
+}
+
+.empty {
+  text-align: center;
+  padding: var(--spacing-xl) !important;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.footer {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Requirements-specific */
+.classCell {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.countCell {
+  text-align: center;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Rooms-specific */
+.capacityCell {
+  text-align: center;
+}
+
+.multiClassBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-sm);
+}

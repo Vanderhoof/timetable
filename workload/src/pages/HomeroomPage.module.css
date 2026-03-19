@@ -1,0 +1,78 @@
+.page { max-width: 800px; }
+.heading { margin: 0 0 8px; font-size: 20px; font-weight: 600; }
+
+.note {
+  font-size: 13px;
+  color: #555;
+  background: #fffbe6;
+  border-left: 3px solid #f0c040;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin: 0 0 16px;
+}
+
+.progress {
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: #27ae60;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.progressText { font-size: 13px; color: #666; margin: 0 0 16px; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid #ddd;
+  color: #555;
+  font-weight: 600;
+}
+
+.table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.table tr:last-child td { border-bottom: none; }
+
+.className { font-weight: 600; color: #1a1a2e; width: 60px; }
+
+.select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+}
+.select:focus { outline: none; border-color: #1a1a2e; }
+.selectEmpty { border-color: #f39c12; background: #fffdf0; }
+
+.razgovory { font-size: 13px; }
+.razgovoryOk { color: #27ae60; }
+.razgovoryMissing { color: #ccc; }
+
+.warning {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #856404;
+  background: #fff9e6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ffc107;
+}

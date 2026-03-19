@@ -1,0 +1,146 @@
+/**
+ * TeacherEditModal styles — teacher-specific only.
+ * Shared form styles (.form, .field, .label, .input, .actions) are in common/FormField.module.css.
+ */
+
+/* Subjects */
+.subjects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.subjectTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+}
+
+.removeTag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--color-primary);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.removeTag:hover {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.addSubject {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.subjectInput {
+  padding: 4px 8px;
+  font-size: var(--font-size-sm);
+  border: var(--border);
+  border-radius: var(--radius-base);
+  width: 150px;
+}
+
+.subjectInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Bans grid */
+.bansGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--color-gray-200);
+  border-radius: var(--radius-base);
+  padding: 2px;
+}
+
+.bansHeader {
+  display: flex;
+  gap: 2px;
+}
+
+.bansRow {
+  display: flex;
+  gap: 2px;
+}
+
+.dayLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 60px;
+  padding: 4px 8px;
+  background: var(--color-gray-100);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
+
+.dayToggle {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.dayToggle:hover {
+  color: var(--color-primary);
+}
+
+.lessonHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  background: var(--color-gray-100);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
+
+.banCell {
+  width: 32px;
+  height: 28px;
+  background: var(--color-bg-card);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.banCell:hover {
+  background: var(--color-gray-100);
+}
+
+.banCell.banned {
+  background: var(--color-cell-banned);
+}
+
+.banCell.banned:hover {
+  background: #ef9a9a;
+}
+
+.bansHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
+}

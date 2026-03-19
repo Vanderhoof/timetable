@@ -1,0 +1,160 @@
+/**
+ * CSS Custom Properties (Variables)
+ * Consistent design tokens across the application
+ */
+
+:root {
+  /* Colors - Primary */
+  --color-primary: #00796b;
+  --color-primary-light: #48a999;
+  --color-primary-dark: #004c40;
+
+  /* Colors - Secondary */
+  --color-secondary: #00acc1;
+  --color-secondary-light: #5ddef4;
+  --color-secondary-dark: #007c91;
+
+  /* Colors - Semantic */
+  --color-success: #4caf50;
+  --color-warning: #ff9800;
+  --color-error: #f44336;
+  --color-info: #2196f3;
+
+  /* Colors - Cell Status (Schedule Grid) */
+  --color-cell-available: #ffffff;
+  --color-cell-same: #bbdefb;           /* Blue - same lesson */
+  --color-cell-banned: #ffcdd2;          /* Pink - teacher banned */
+  --color-cell-teacher-busy: #ffe0b2;    /* Orange - teacher busy elsewhere */
+  --color-cell-partner-busy: #cfd8dc;    /* Blue-gray - partner unit busy */
+  --color-cell-occupied: #fff8e1;        /* Cream - class occupied */
+  --color-cell-selected: #fff176;        /* Yellow - selected cells */
+  --color-cell-changed: #fff59d;         /* Yellow highlight - differs from template */
+
+  /* Colors - Grays */
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #eeeeee;
+  --color-gray-300: #e0e0e0;
+  --color-gray-400: #bdbdbd;
+  --color-gray-500: #9e9e9e;
+  --color-gray-600: #757575;
+  --color-gray-700: #616161;
+  --color-gray-800: #424242;
+  --color-gray-900: #212121;
+
+  /* Colors - Background */
+  --color-bg-page: #f5f5f5;
+  --color-bg-card: #ffffff;
+  --color-bg-header: #000000;
+
+  /* Colors - Text */
+  --color-text-primary: #212121;
+  --color-text-secondary: #757575;
+  --color-text-disabled: #bdbdbd;
+  --color-text-inverse: #ffffff;
+  --color-text-link: #1976d2;
+
+  /* Typography */
+  --font-family-base: Arial, Helvetica, sans-serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+  --line-height-loose: 1.75;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-base: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
+
+  /* Borders */
+  --border-width: 1px;
+  --border-color: var(--color-gray-300);
+  --border: var(--border-width) solid var(--border-color);
+
+  /* Focus */
+  --focus-ring: 0 0 0 2px var(--color-primary-light);
+
+  /* Transitions */
+  --transition-fast: 100ms ease-out;
+  --transition-base: 200ms ease-out;
+  --transition-slow: 300ms ease-out;
+
+  /* Z-index layers */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-tooltip: 500;
+  --z-notification: 600;
+
+  /* Grid specific */
+  --grid-cell-min-height: 60px;
+  --grid-header-height: 32px;
+  --grid-row-header-width: 40px;
+
+  /* Panel widths */
+  --panel-width-sm: 200px;
+  --panel-width-md: 280px;
+  --panel-width-lg: 360px;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --color-bg-page: #1a1a2e;
+  --color-bg-card: #16213e;
+  --color-bg-header: #0f0f23;
+
+  --color-text-primary: #eaeaea;
+  --color-text-secondary: #a0a0a0;
+  --color-text-disabled: #666666;
+  --color-text-inverse: #ffffff;
+
+  --color-gray-50: #2a2a4a;
+  --color-gray-100: #252545;
+  --color-gray-200: #303050;
+  --color-gray-300: #404060;
+  --color-gray-400: #606080;
+  --color-gray-500: #8080a0;
+
+  --color-cell-available: #1e1e3f;
+  --color-cell-same: #1a365d;
+  --color-cell-banned: #4a2020;
+  --color-cell-teacher-busy: #4a3520;
+  --color-cell-occupied: #3a3520;
+  --color-cell-selected: #4a4a00;
+
+  --border-color: var(--color-gray-400);
+}

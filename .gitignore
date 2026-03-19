@@ -1,0 +1,61 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Binary/archive files
+*.zip
+*.png
+*.docx
+*.xlsx
+
+# Exception: Tauri app icons and favicon must be committed
+!src-tauri/icons/**/*.png
+!public/favicon.png
+
+# Old version snapshots
+v3.*/
+
+# Tauri build cache
+src-tauri/target/
+
+# Development-only docs (not for public repo)
+CLAUDE.md
+ROADMAP.md
+ARCHITECTURE.md
+GUIDELINES.md
+docs/
+
+# Claude Code and tool state
+.claude/
+.playwright-mcp/
+.serena/
+.idea/
+
+# Workload internal dev docs
+workload/MU-*.md
+workload/Z7-*.md
+workload/MULTIUSER.md
+
+# Misc
+review_start.html

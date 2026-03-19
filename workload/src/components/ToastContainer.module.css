@@ -1,0 +1,77 @@
+.container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1500;
+  width: 320px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+  padding: 12px 14px;
+  border-left: 4px solid transparent;
+  pointer-events: all;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.toastVisible {
+  opacity: 1;
+}
+
+.toastExiting {
+  opacity: 0;
+}
+
+.message {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #1a1a1a;
+}
+
+.closeBtn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: #888;
+  padding: 0;
+  margin-top: -1px;
+}
+
+.closeBtn:hover {
+  color: #333;
+}
+
+/* Type-specific border colors and backgrounds */
+.success {
+  border-left-color: #27ae60;
+  background: #f0fdf4;
+}
+
+.info {
+  border-left-color: #2980b9;
+  background: #eff6ff;
+}
+
+.warning {
+  border-left-color: #f39c12;
+  background: #fffbeb;
+}
+
+.error {
+  border-left-color: #c0392b;
+  background: #fef2f2;
+}

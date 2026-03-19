@@ -1,0 +1,122 @@
+/**
+ * SettingsPage styles
+ */
+
+.page {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  background: var(--color-bg-page);
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-primary);
+}
+
+.section {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-md);
+  margin: 0 0 var(--spacing-md) 0;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: var(--border);
+  color: var(--color-text-primary);
+}
+
+.setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.settingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.settingName {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.settingDesc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.about {
+  color: var(--color-text-primary);
+  line-height: var(--line-height-loose);
+}
+
+.about p {
+  margin: var(--spacing-xs) 0;
+}
+
+.muted {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.snapshotItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: var(--border);
+}
+
+.snapshotItem:last-of-type {
+  border-bottom: none;
+}
+
+.snapshotActions {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.snapshotAddRow {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  margin-top: var(--spacing-sm);
+}
+
+.snapshotLabelInput {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.snapshotLabelInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.snapshotAddBtn {
+  margin-top: var(--spacing-sm);
+}

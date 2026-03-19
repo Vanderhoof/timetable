@@ -1,0 +1,64 @@
+/**
+ * ScheduleGrid styles
+ */
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-card);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: var(--grid-row-header-width) repeat(5, 1fr);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: var(--grid-row-header-width) repeat(5, 1fr);
+}
+
+.cornerCell {
+  background: var(--color-gray-100);
+  border-bottom: var(--border);
+  border-right: var(--border);
+}
+
+.dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--grid-header-height);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  border-bottom: var(--border);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dayHeader:last-child {
+  border-right: none;
+}
+
+.lessonHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-gray-100);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  border-bottom: var(--border);
+  border-right: var(--border);
+}
+
+.row:last-child .lessonHeader {
+  border-bottom: none;
+}
+

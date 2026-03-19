@@ -1,0 +1,761 @@
+/**
+ * EditorPage - Main schedule editor layout
+ */
+
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import type { Day, LessonNumber, Room, ScheduledLesson, CellRef, LessonRequirement, Teacher } from '@/types';
+import { useUIStore, useDataStore, useScheduleStore } from '@/stores';
+import { createVersion, updateVersionSchedule, updateVersionMetadata } from '@/db';
+import { getAvailableRooms, isRoomAvailable, getUnscheduledLessons, mergeWithTemporaryLessons, createScheduledLesson } from '@/logic';
+import { ClassSelector, groupClassesByGrade } from './ClassSelector';
+import { ScheduleGrid } from './ScheduleGrid';
+import { UnscheduledPanel } from './UnscheduledPanel';
+import { ProtocolPanel } from './ProtocolPanel';
+import { RoomPicker } from './RoomPicker';
+import { ReplacementPanel } from './ReplacementPanel';
+import { AbsentPanel } from './AbsentPanel';
+import { ValidationPanel } from './ValidationPanel';
+import { ContextMenu, ContextMenuItem, ContextMenuDivider } from '@/components/common/ContextMenu';
+import { Button } from '@/components/common/Button';
+import { Modal } from '@/components/common/Modal';
+import { HintBar } from '@/components/common/HintBar';
+import { useToast } from '@/components/common/Toast';
+import { usePickerState } from '@/hooks/usePickerState';
+import { useEditorKeyboard } from '@/hooks/useEditorKeyboard';
+import styles from './EditorPage.module.css';
+
+export function EditorPage() {
+  const currentClass = useUIStore((state) => state.currentClass);
+  const classes = useDataStore((state) => state.classes);
+  const gapExcludedClasses = useDataStore((state) => state.gapExcludedClasses);
+  const setCurrentClass = useUIStore((state) => state.setCurrentClass);
+  const selectedLesson = useUIStore((state) => state.selectedLesson);
+  const selectLesson = useUIStore((state) => state.selectLesson);
+  const contextMenu = useUIStore((state) => state.contextMenu);
+  const closeContextMenu = useUIStore((state) => state.closeContextMenu);
+
+  const { assignLesson, removeLesson, removeLessons, changeRoom } = useScheduleStore();
+  const { undo, redo } = useScheduleStore();
+  const selectedCells = useUIStore((state) => state.selectedCells);
+  const clearCellSelection = useUIStore((state) => state.clearCellSelection);
+  const schedule = useScheduleStore((state) => state.schedule);
+  const versionId = useScheduleStore((state) => state.versionId);
+  const versionType = useScheduleStore((state) => state.versionType);
+  const versionName = useScheduleStore((state) => state.versionName);
+  const isDirty = useScheduleStore((state) => state.isDirty);
+  const markSaved = useScheduleStore((state) => state.markSaved);
+  const temporaryLessons = useScheduleStore((state) => state.temporaryLessons);
+  const lessonStatuses = useScheduleStore((state) => state.lessonStatuses);
+  const mondayDate = useScheduleStore((state) => state.mondayDate);
+  const versionDaysPerWeek = useScheduleStore((state) => state.versionDaysPerWeek);
+  const requirements = useDataStore((state) => state.lessonRequirements);
+  const teachers = useDataStore((state) => state.teachers);
+  const rooms = useDataStore((state) => state.rooms);
+  const copiedLesson = useUIStore((state) => state.copiedLesson);
+  const setCopiedLesson = useUIStore((state) => state.setCopiedLesson);
+  const movingLesson = useUIStore((state) => state.movingLesson);
+  const setMovingLesson = useUIStore((state) => state.setMovingLesson);
+  const clearMovingLesson = useUIStore((state) => state.clearMovingLesson);
+  const absentTeacher = useUIStore((state) => state.absentTeacher);
+
+  const [isSaving, setIsSaving] = useState(false);
+  const { showToast } = useToast();
+
+  // Track substitution metadata across the replacement → room picker flow
+  const substitutionRef = useRef<{ originalTeacher: string } | null>(null);
+
+  // Track force-override flag across the shift+click → room picker flow
+  const forceOverrideRef = useRef(false);
+
+  // Student count for current class (used for room capacity validation)
+  // For group lessons, skip capacity check (any group fits any room)
+  const currentClassStudentCount = useMemo(() => {
+    if (!currentClass) return undefined;
+    if (selectedLesson?.type === 'group') return undefined;
+    return classes.find(c => c.name === currentClass)?.studentCount;
+  }, [currentClass, classes, selectedLesson]);
+
+  // Contextual hint based on current editor state
+  const hintText = useMemo(() => {
+    if (movingLesson) return 'Кликните по ячейке, куда переместить занятие. Esc — отмена';
+    if (absentTeacher) return 'Отметьте уроки, требующие замены';
+    if (copiedLesson) return 'Нажмите на ячейку для вставки скопированного занятия. Esc — отмена';
+    if (selectedCells.length > 0) return `Выделено: ${selectedCells.length}. Delete — удалить, Ctrl+клик — добавить ещё`;
+    if (selectedLesson) return (versionType === 'weekly' || versionType === 'technical')
+      ? 'Нажмите на ячейку для назначения. Shift+клик на запрет — поставить вопреки. Двойной клик — авто-кабинет'
+      : 'Нажмите на свободную ячейку сетки для назначения. Двойной клик — авто-кабинет';
+    return 'Выберите занятие из панели «Занятия» справа или нажмите на ячейку';
+  }, [movingLesson, absentTeacher, copiedLesson, selectedCells.length, selectedLesson, versionType]);
+
+  // Room picker state - supports both single cell and bulk assignment
+  const roomPicker = usePickerState<{
+    day: Day;
+    lessonNum: LessonNumber;
+    bulkCells?: CellRef[]; // If set, assign to all these cells
+  }>();
+
+  // Replacement picker state
+  const replacementPicker = usePickerState<{
+    day: Day;
+    lessonNum: LessonNumber;
+    lessonIndex: number;
+    currentLesson?: {
+      subject: string;
+      teacher: string;
+      group?: string;
+    };
+  }>();
+
+  // Change room picker state
+  const changeRoomPicker = usePickerState<{
+    day: Day;
+    lessonNum: LessonNumber;
+    lessonIndex: number;
+    subject: string;
+    teacher: string;
+    isGroup: boolean;
+  }>();
+
+  // Move target room picker state
+  const moveTargetPicker = usePickerState<{
+    day: Day;
+    lessonNum: LessonNumber;
+  }>();
+
+  // Paste warning state (replaces window.confirm/alert to avoid React crash)
+  const [pasteWarning, setPasteWarning] = useState<{
+    type: 'extra' | 'roomBusy';
+    message: string;
+    day: Day;
+    lessonNum: LessonNumber;
+    lesson: ScheduledLesson;
+    /** For roomBusy: lesson with room cleared */
+    lessonWithoutRoom?: ScheduledLesson;
+  } | null>(null);
+
+  // Set initial class if none selected — pick the first non-excluded class (top-left in selector)
+  useEffect(() => {
+    if (!currentClass && classes.length > 0) {
+      const classNames = classes.map(c => c.name);
+      const sorted = groupClassesByGrade(classNames, gapExcludedClasses);
+      const firstClass = sorted[0]?.[1][0] ?? classes[0].name;
+      setCurrentClass(firstClass);
+    }
+  }, [currentClass, classes, gapExcludedClasses, setCurrentClass]);
+
+  // Keyboard shortcuts (Delete, Escape, Ctrl+Z/Y)
+  const { handleDeleteSelected } = useEditorKeyboard({
+    selectedCells,
+    schedule,
+    removeLessons,
+    clearSelectedCells: clearCellSelection,
+    setSelectedLesson: selectLesson,
+    setCopiedLesson,
+    undo,
+    redo,
+    closeContextMenu,
+    clearMovingLesson,
+    closeMoveTargetPicker: moveTargetPicker.close,
+  });
+
+  // Handle room selection for lesson assignment (single or bulk)
+  const handleRoomSelect = useCallback(
+    (room: Room) => {
+      if (!selectedLesson || !roomPicker.data) return;
+
+      // Bulk assignment mode
+      if (roomPicker.data.bulkCells && roomPicker.data.bulkCells.length > 0) {
+        for (const cell of roomPicker.data.bulkCells) {
+          const lesson = createScheduledLesson(selectedLesson, room.shortName);
+          assignLesson({
+            className: cell.className,
+            day: cell.day,
+            lessonNum: cell.lessonNum,
+            lesson,
+          });
+        }
+        clearCellSelection();
+      } else if (currentClass) {
+        // Single cell assignment
+        const opts = {
+          originalTeacher: substitutionRef.current?.originalTeacher,
+          isSubstitution: substitutionRef.current ? true : undefined,
+          forceOverride: forceOverrideRef.current ? true : undefined,
+        };
+        substitutionRef.current = null;
+        forceOverrideRef.current = false;
+        const lesson = createScheduledLesson(selectedLesson, room.shortName, opts);
+
+        assignLesson({
+          className: currentClass,
+          day: roomPicker.data.day,
+          lessonNum: roomPicker.data.lessonNum,
+          lesson,
+        });
+      }
+
+      roomPicker.close();
+      selectLesson(null);
+    },
+    [selectedLesson, roomPicker, currentClass, assignLesson, selectLesson, clearCellSelection]
+  );
+
+  // Handle save
+  const handleSave = useCallback(async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    try {
+      const name = versionName || `Расписание ${new Date().toLocaleDateString('ru-RU')}`;
+
+      if (versionId) {
+        // Update existing version
+        await updateVersionSchedule(versionId, schedule, undefined, temporaryLessons, lessonStatuses);
+        await updateVersionMetadata(versionId, { name });
+        markSaved(versionId, name);
+      } else {
+        // Create new version
+        const version = await createVersion({
+          name,
+          type: versionType,
+          schedule,
+          temporaryLessons,
+          lessonStatuses,
+          mondayDate: mondayDate ?? undefined,
+          daysPerWeek: versionDaysPerWeek ?? undefined,
+        });
+        markSaved(version.id, name);
+      }
+      showToast('Расписание сохранено', 'success');
+    } catch (err) {
+      console.error('Save error:', err);
+      showToast('Ошибка сохранения', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [isSaving, versionId, versionName, versionType, schedule, temporaryLessons, lessonStatuses, mondayDate, versionDaysPerWeek, markSaved, showToast]);
+
+  // Handle cell click to assign lesson (or paste copied lesson)
+  const handleAssignLesson = useCallback(
+    (day: Day, lessonNum: LessonNumber) => {
+      // Move mode: user clicked target cell, open room picker
+      if (movingLesson && currentClass) {
+        moveTargetPicker.open({ day, lessonNum });
+        return;
+      }
+
+      // Paste copied lesson (duplicate semantics: source stays, copy added)
+      if (copiedLesson && currentClass) {
+        const req = copiedLesson.requirement;
+
+        // Build the lesson to paste
+        const lesson = createScheduledLesson(req, copiedLesson.room);
+
+        // Check remaining count using current schedule (source not removed)
+        const mergedReqs = mergeWithTemporaryLessons(requirements, temporaryLessons);
+        const unscheduled = getUnscheduledLessons(mergedReqs, schedule, currentClass);
+        const remaining = unscheduled.find(u => u.requirement.id === req.id)?.remaining ?? 0;
+
+        if (remaining <= 0) {
+          setPasteWarning({
+            type: 'extra',
+            message: `Все занятия «${req.subject} ${req.teacher}» для класса ${currentClass} уже расставлены. Добавить лишнее занятие?`,
+            day, lessonNum, lesson,
+          });
+          return;
+        }
+
+        // Check room availability
+        if (lesson.room) {
+          const roomFree = isRoomAvailable(schedule, rooms, lesson.room, day, lessonNum);
+          if (!roomFree) {
+            let occupant = '';
+            for (const [cn, classSchedule] of Object.entries(schedule)) {
+              const slotLessons = classSchedule[day]?.[lessonNum]?.lessons ?? [];
+              for (const l of slotLessons) {
+                if (l.room === lesson.room) {
+                  occupant = `${l.subject} ${l.teacher} (${cn})`;
+                  break;
+                }
+              }
+              if (occupant) break;
+            }
+            setPasteWarning({
+              type: 'roomBusy',
+              message: `Кабинет ${lesson.room} занят: ${occupant}. Вставить без кабинета?`,
+              day, lessonNum, lesson,
+              lessonWithoutRoom: { ...lesson, room: '' },
+            });
+            return;
+          }
+        }
+
+        assignLesson({ className: currentClass, day, lessonNum, lesson });
+        setCopiedLesson(null);
+        return;
+      }
+
+      // Normal flow: open room picker for selected lesson
+      if (!selectedLesson) return;
+      roomPicker.open({ day, lessonNum });
+    },
+    [movingLesson, copiedLesson, selectedLesson, currentClass, schedule, rooms, requirements, temporaryLessons, assignLesson, setCopiedLesson, roomPicker, moveTargetPicker]
+  );
+
+  // Handle quick assign (double-click) - auto-select first available room
+  const handleQuickAssign = useCallback(
+    (day: Day, lessonNum: LessonNumber) => {
+      if (!selectedLesson || !currentClass) return;
+
+      const availableRooms = getAvailableRooms(schedule, rooms, day, lessonNum);
+      if (availableRooms.length === 0) {
+        // No rooms available, open picker to show message
+        roomPicker.open({ day, lessonNum });
+        return;
+      }
+
+      // Auto-select first available room
+      const room = availableRooms[0];
+      const lesson = createScheduledLesson(selectedLesson, room.shortName);
+
+      assignLesson({
+        className: currentClass,
+        day,
+        lessonNum,
+        lesson,
+      });
+
+      selectLesson(null);
+    },
+    [selectedLesson, currentClass, schedule, rooms, assignLesson, selectLesson, roomPicker]
+  );
+
+  // Handle force-assign (Shift+click on banned/busy cell in weekly mode)
+  const handleForceAssign = useCallback(
+    (day: Day, lessonNum: LessonNumber) => {
+      forceOverrideRef.current = true;
+      handleAssignLesson(day, lessonNum);
+    },
+    [handleAssignLesson]
+  );
+
+  // Context menu handlers
+  const handleRemoveLesson = useCallback(() => {
+    if (!contextMenu.cellRef || contextMenu.lessonIndex === null) return;
+    removeLesson({
+      className: contextMenu.cellRef.className,
+      day: contextMenu.cellRef.day,
+      lessonNum: contextMenu.cellRef.lessonNum,
+      lessonIndex: contextMenu.lessonIndex,
+    });
+    closeContextMenu();
+  }, [contextMenu, removeLesson, closeContextMenu]);
+
+  // Open replacement picker
+  const handleOpenReplace = useCallback(() => {
+    if (!contextMenu.cellRef || contextMenu.lessonIndex === null) return;
+    const { className, day, lessonNum } = contextMenu.cellRef;
+    const lessons = schedule[className]?.[day]?.[lessonNum]?.lessons ?? [];
+    const currentLessonData = lessons[contextMenu.lessonIndex];
+
+    replacementPicker.open({
+      day,
+      lessonNum,
+      lessonIndex: contextMenu.lessonIndex,
+      currentLesson: currentLessonData ? {
+        subject: currentLessonData.subject,
+        teacher: currentLessonData.teacher,
+        group: currentLessonData.group,
+      } : undefined,
+    });
+    closeContextMenu();
+  }, [contextMenu, schedule, closeContextMenu, replacementPicker]);
+
+  // Open change room picker
+  const handleOpenChangeRoom = useCallback(() => {
+    if (!contextMenu.cellRef || contextMenu.lessonIndex === null) return;
+    const { className, day, lessonNum } = contextMenu.cellRef;
+    const lessons = schedule[className]?.[day]?.[lessonNum]?.lessons ?? [];
+    const lesson = lessons[contextMenu.lessonIndex];
+    if (!lesson) return;
+
+    changeRoomPicker.open({
+      day,
+      lessonNum,
+      lessonIndex: contextMenu.lessonIndex,
+      subject: lesson.subject,
+      teacher: lesson.teacher,
+      isGroup: !!lesson.group,
+    });
+    closeContextMenu();
+  }, [contextMenu, schedule, closeContextMenu, changeRoomPicker]);
+
+  // Handle copy lesson from context menu
+  const handleCopyLesson = useCallback(() => {
+    if (!contextMenu.cellRef || contextMenu.lessonIndex === null) return;
+    const { className: cellClass, day, lessonNum } = contextMenu.cellRef;
+    const lessons = schedule[cellClass]?.[day]?.[lessonNum]?.lessons ?? [];
+    const lesson = lessons[contextMenu.lessonIndex];
+    if (!lesson) return;
+
+    // Find the matching requirement
+    const mergedReqs = mergeWithTemporaryLessons(requirements, temporaryLessons);
+    const req = mergedReqs.find(r =>
+      r.id === lesson.requirementId ||
+      (r.subject === lesson.subject &&
+       r.teacher === lesson.teacher &&
+       (r.type === 'class' || r.classOrGroup === lesson.group))
+    );
+    if (!req) return;
+
+    setCopiedLesson({
+      requirement: req,
+      room: lesson.room,
+      sourceRef: {
+        className: cellClass,
+        day,
+        lessonNum,
+        lessonIndex: contextMenu.lessonIndex,
+      },
+    });
+    closeContextMenu();
+  }, [contextMenu, schedule, requirements, temporaryLessons, setCopiedLesson, closeContextMenu]);
+
+  // Handle move lesson from context menu
+  const handleStartMove = useCallback(() => {
+    if (!contextMenu.cellRef || contextMenu.lessonIndex === null) return;
+    const { className: cellClass, day, lessonNum } = contextMenu.cellRef;
+    const lessons = schedule[cellClass]?.[day]?.[lessonNum]?.lessons ?? [];
+    const lesson = lessons[contextMenu.lessonIndex];
+    if (!lesson) return;
+
+    // Find the matching requirement
+    const mergedReqs = mergeWithTemporaryLessons(requirements, temporaryLessons);
+    const req = mergedReqs.find(r =>
+      r.id === lesson.requirementId ||
+      (r.subject === lesson.subject &&
+       r.teacher === lesson.teacher &&
+       (r.type === 'class' || r.classOrGroup === lesson.group))
+    );
+    if (!req) return;
+
+    setMovingLesson({
+      sourceRef: { className: cellClass, day, lessonNum, lessonIndex: contextMenu.lessonIndex },
+      requirement: req,
+      room: lesson.room,
+      teacher: lesson.teacher,
+      originalTeacher: lesson.originalTeacher,
+      isSubstitution: lesson.isSubstitution,
+    });
+    closeContextMenu();
+  }, [contextMenu, schedule, requirements, temporaryLessons, setMovingLesson, closeContextMenu]);
+
+  // Handle room selection for change room
+  const handleChangeRoomSelect = useCallback(
+    (room: Room) => {
+      if (!changeRoomPicker.data || !currentClass) return;
+      changeRoom({
+        className: currentClass,
+        day: changeRoomPicker.data.day,
+        lessonNum: changeRoomPicker.data.lessonNum,
+        lessonIndex: changeRoomPicker.data.lessonIndex,
+        newRoom: room.shortName,
+      });
+      changeRoomPicker.close();
+    },
+    [changeRoomPicker, currentClass, changeRoom]
+  );
+
+  // Handle room selection for move operation
+  const handleMoveRoomSelect = useCallback(
+    (room: Room) => {
+      if (!movingLesson || !moveTargetPicker.data || !currentClass) return;
+
+      // Remove from source
+      removeLesson(movingLesson.sourceRef);
+
+      // Assign at target with new room, preserving substitution metadata
+      const lesson = createScheduledLesson(movingLesson.requirement, room.shortName, {
+        originalTeacher: movingLesson.originalTeacher,
+        isSubstitution: movingLesson.isSubstitution,
+      });
+      assignLesson({
+        className: currentClass,
+        day: moveTargetPicker.data.day,
+        lessonNum: moveTargetPicker.data.lessonNum,
+        lesson,
+      });
+
+      moveTargetPicker.close();
+      clearMovingLesson();
+    },
+    [movingLesson, moveTargetPicker, currentClass, removeLesson, assignLesson, clearMovingLesson]
+  );
+
+  // Handle replacement selection - removes old lesson, opens room picker for new
+  const handleReplacementSelect = useCallback(
+    (lesson: LessonRequirement) => {
+      if (!replacementPicker.data || !currentClass) return;
+
+      // Remove the old lesson first
+      removeLesson({
+        className: currentClass,
+        day: replacementPicker.data.day,
+        lessonNum: replacementPicker.data.lessonNum,
+        lessonIndex: replacementPicker.data.lessonIndex,
+      });
+
+      // Select the new lesson and open room picker
+      selectLesson(lesson);
+      roomPicker.open({
+        day: replacementPicker.data.day,
+        lessonNum: replacementPicker.data.lessonNum,
+      });
+
+      replacementPicker.close();
+    },
+    [replacementPicker, currentClass, removeLesson, selectLesson, roomPicker]
+  );
+
+  // Handle substitute teacher selection from replacement panel
+  const handleSubstituteSelect = useCallback(
+    (teacher: Teacher) => {
+      if (!replacementPicker.data || !currentClass) return;
+
+      // Remember this is a substitution
+      substitutionRef.current = {
+        originalTeacher: replacementPicker.data.currentLesson?.teacher ?? '',
+      };
+
+      // Remove old lesson
+      removeLesson({
+        className: currentClass,
+        day: replacementPicker.data.day,
+        lessonNum: replacementPicker.data.lessonNum,
+        lessonIndex: replacementPicker.data.lessonIndex,
+      });
+
+      // Create synthetic requirement for the substitute teacher
+      const group = replacementPicker.data.currentLesson?.group;
+      const syntheticReq: LessonRequirement = {
+        id: `substitute-${teacher.name}`,
+        type: group ? 'group' : 'class',
+        classOrGroup: group ?? currentClass,
+        subject: replacementPicker.data.currentLesson?.subject ?? '',
+        teacher: teacher.name,
+        countPerWeek: 1,
+        ...(group ? { className: currentClass } : {}),
+      };
+
+      // Select and open room picker (same flow as handleReplacementSelect)
+      selectLesson(syntheticReq);
+      roomPicker.open({
+        day: replacementPicker.data.day,
+        lessonNum: replacementPicker.data.lessonNum,
+      });
+      replacementPicker.close();
+    },
+    [replacementPicker, currentClass, removeLesson, selectLesson, roomPicker]
+  );
+
+  // Handle bulk assign - open room picker for all selected cells
+  const handleBulkAssign = useCallback(() => {
+    if (!selectedLesson || selectedCells.length === 0) return;
+    // Use first cell's day/lessonNum for room picker display, but assign to all cells
+    const firstCell = selectedCells[0];
+    roomPicker.open({
+      day: firstCell.day,
+      lessonNum: firstCell.lessonNum,
+      bulkCells: selectedCells,
+    });
+  }, [selectedLesson, selectedCells, roomPicker]);
+
+  // Check if bulk assign is available
+  const canBulkAssign = selectedLesson && selectedCells.length > 0;
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.sidebar}>
+        <ClassSelector />
+        <ValidationPanel />
+        <ProtocolPanel />
+      </div>
+
+      <div className={styles.main}>
+        {currentClass ? (
+          <>
+            <div className={styles.gridHeader}>
+              <h2 className={styles.className}>{currentClass}</h2>
+              <div className={styles.headerActions}>
+                {canBulkAssign && (
+                  <Button
+                    variant="primary"
+                    size="small"
+                    onClick={handleBulkAssign}
+                    title={`Назначить "${selectedLesson?.subject}" на ${selectedCells.length} ячеек`}
+                  >
+                    Назначить ({selectedCells.length})
+                  </Button>
+                )}
+                <Button
+                  variant={isDirty ? 'danger' : 'secondary'}
+                  size="small"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  title="Сохранить расписание"
+                >
+                  {isSaving ? 'Сохранение...' : isDirty ? 'Сохранить*' : 'Сохранить'}
+                </Button>
+              </div>
+            </div>
+            {(movingLesson || absentTeacher || copiedLesson || selectedCells.length > 0 || selectedLesson) && <HintBar text={hintText} />}
+            <ScheduleGrid
+              className={currentClass}
+              onAssignLesson={handleAssignLesson}
+              onQuickAssign={handleQuickAssign}
+              onNavigateToClass={setCurrentClass}
+              onForceAssign={handleForceAssign}
+            />
+          </>
+        ) : (
+          <div className={styles.placeholder}>
+            Выберите класс для редактирования расписания
+          </div>
+        )}
+      </div>
+
+      <div className={styles.rightPanel}>
+        {currentClass && <UnscheduledPanel className={currentClass} />}
+        {(versionType === 'weekly' || versionType === 'technical') && <AbsentPanel />}
+        {replacementPicker.isOpen && currentClass && replacementPicker.data && (
+          <ReplacementPanel
+            className={currentClass}
+            day={replacementPicker.data.day}
+            lessonNum={replacementPicker.data.lessonNum}
+            lessonIndex={replacementPicker.data.lessonIndex}
+            currentLesson={replacementPicker.data.currentLesson}
+            onSelect={handleReplacementSelect}
+            onSubstituteSelect={handleSubstituteSelect}
+            onClose={replacementPicker.close}
+          />
+        )}
+      </div>
+
+      {/* Context Menu */}
+      <ContextMenu
+        isOpen={contextMenu.isOpen}
+        x={contextMenu.position?.x ?? 0}
+        y={contextMenu.position?.y ?? 0}
+        onClose={closeContextMenu}
+      >
+        {contextMenu.lessonIndex !== null && (
+          <>
+            <ContextMenuItem onClick={handleCopyLesson}>
+              Копировать
+            </ContextMenuItem>
+            <ContextMenuItem onClick={handleOpenReplace}>
+              Заменить
+            </ContextMenuItem>
+            <ContextMenuItem onClick={handleStartMove}>
+              Переместить
+            </ContextMenuItem>
+            <ContextMenuItem onClick={handleOpenChangeRoom}>
+              Поменять кабинет
+            </ContextMenuItem>
+            <ContextMenuItem onClick={handleRemoveLesson}>
+              Удалить занятие
+            </ContextMenuItem>
+            <ContextMenuDivider />
+          </>
+        )}
+        {selectedCells.length > 0 && (
+          <>
+            <ContextMenuItem onClick={() => { handleDeleteSelected(); closeContextMenu(); }}>
+              Удалить все выделенные ({selectedCells.length})
+            </ContextMenuItem>
+            <ContextMenuDivider />
+          </>
+        )}
+        <ContextMenuItem onClick={closeContextMenu}>Отмена</ContextMenuItem>
+      </ContextMenu>
+
+      {/* Room Picker Modal */}
+      {roomPicker.isOpen && roomPicker.data && (
+        <RoomPicker
+          isOpen={true}
+          onClose={roomPicker.close}
+          onSelect={handleRoomSelect}
+          day={roomPicker.data.day}
+          lessonNum={roomPicker.data.lessonNum}
+          preferredSubject={selectedLesson?.subject}
+          preferredRoom={selectedLesson ? teachers[selectedLesson.teacher]?.defaultRoom : undefined}
+          studentCount={currentClassStudentCount}
+        />
+      )}
+
+      {/* Change Room Picker Modal */}
+      {changeRoomPicker.isOpen && changeRoomPicker.data && (
+        <RoomPicker
+          isOpen={true}
+          onClose={changeRoomPicker.close}
+          onSelect={handleChangeRoomSelect}
+          day={changeRoomPicker.data.day}
+          lessonNum={changeRoomPicker.data.lessonNum}
+          preferredSubject={changeRoomPicker.data.subject}
+          preferredRoom={teachers[changeRoomPicker.data.teacher]?.defaultRoom}
+          studentCount={changeRoomPicker.data.isGroup ? undefined : currentClassStudentCount}
+        />
+      )}
+
+      {/* Move Target Room Picker Modal */}
+      {moveTargetPicker.isOpen && moveTargetPicker.data && movingLesson && (
+        <RoomPicker
+          isOpen={true}
+          onClose={() => { moveTargetPicker.close(); clearMovingLesson(); }}
+          onSelect={handleMoveRoomSelect}
+          day={moveTargetPicker.data.day}
+          lessonNum={moveTargetPicker.data.lessonNum}
+          preferredSubject={movingLesson.requirement.subject}
+          preferredRoom={teachers[movingLesson.teacher]?.defaultRoom}
+          studentCount={currentClassStudentCount}
+        />
+      )}
+
+      {pasteWarning && (
+        <Modal
+          isOpen={true}
+          onClose={() => setPasteWarning(null)}
+          title="Вставка занятия"
+          size="small"
+          footer={
+            <div style={{ display: 'flex', gap: 'var(--spacing-xs)', justifyContent: 'flex-end' }}>
+              <Button variant="ghost" size="small" onClick={() => setPasteWarning(null)}>
+                Отмена
+              </Button>
+              {pasteWarning.type === 'extra' ? (
+                <Button variant="primary" size="small" onClick={() => {
+                  if (!currentClass) return;
+                  assignLesson({ className: currentClass, day: pasteWarning.day, lessonNum: pasteWarning.lessonNum, lesson: pasteWarning.lesson });
+                  setCopiedLesson(null);
+                  setPasteWarning(null);
+                }}>
+                  Добавить
+                </Button>
+              ) : (
+                <Button variant="primary" size="small" onClick={() => {
+                  if (!currentClass) return;
+                  assignLesson({ className: currentClass, day: pasteWarning.day, lessonNum: pasteWarning.lessonNum, lesson: pasteWarning.lessonWithoutRoom! });
+                  setCopiedLesson(null);
+                  setPasteWarning(null);
+                }}>
+                  Вставить без кабинета
+                </Button>
+              )}
+            </div>
+          }
+        >
+          <p>{pasteWarning.message}</p>
+        </Modal>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,555 @@
+.placeholder h2 { font-size: 20px; margin: 0 0 8px; }
+.placeholder p { color: #888; font-size: 14px; }
+
+.page { min-width: 0; }
+
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.heading { margin: 0; font-size: 20px; font-weight: 600; }
+
+.validateBtn {
+  padding: 7px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  position: relative;
+}
+.validateBtn:hover { background: #f5f5ff; border-color: #1a1a2e; }
+
+/* З9-3а: Undo/Redo buttons */
+.undoRedoGroup {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.undoBtn {
+  padding: 6px 11px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  color: #444;
+}
+.undoBtn:hover:not(:disabled) { background: #f5f5ff; border-color: #1a1a2e; }
+.undoBtn:disabled { opacity: 0.35; cursor: default; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+.validOk {
+  background: #eafaf1;
+  border: 1px solid #a9dfbf;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #1e8449;
+  margin-bottom: 16px;
+}
+
+.validPanel {
+  background: #fdfefe;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.validError {
+  font-size: 13px;
+  color: #c0392b;
+  padding: 3px 0;
+}
+
+.validWarn {
+  font-size: 13px;
+  color: #856404;
+  padding: 3px 0;
+}
+
+.deptTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.deptTab {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: #f5f5f5;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.deptTab:hover { background: #eee; }
+
+.deptTabActive {
+  background: #1a1a2e;
+  color: #fff;
+  border-color: #1a1a2e;
+}
+.deptTabActive:hover { background: #2a2a4e; }
+
+.deptCount {
+  background: rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 11px;
+}
+.deptTab:not(.deptTabActive) .deptCount {
+  background: #ddd;
+  color: #555;
+}
+
+.empty { color: #888; font-size: 14px; }
+
+.tableWrap {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.table {
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 600px;
+}
+
+.table th, .table td {
+  border: 1px solid #e0e0e0;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+
+.teacherCol {
+  width: 160px;
+  min-width: 160px;
+  white-space: nowrap;
+  background: #f9f9f9;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+/* З10-2: workload summary column; З13-2: 20% wider (120→144px) */
+.workloadCol {
+  min-width: 144px;
+  width: 144px;
+  background: #f9f9f9;
+  font-weight: 600;
+  position: sticky;
+  left: 160px;
+  z-index: 2;
+}
+
+/* З6-11: two total columns (positions updated for З13-2: 280→304, 335→359) */
+.deptTotalCol {
+  min-width: 55px;
+  width: 55px;
+  text-align: center;
+  background: #f9f9f9;
+  font-weight: 600;
+  position: sticky;
+  left: 304px;
+  z-index: 2;
+}
+.allTotalCol {
+  min-width: 55px;
+  width: 55px;
+  text-align: center;
+  background: #f9f9f9;
+  font-weight: 600;
+  position: sticky;
+  left: 359px;
+  z-index: 2;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+}
+
+.classHeader {
+  text-align: center;
+  min-width: 90px;
+  background: #f9f9f9;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.classHeaderOver {
+  composes: classHeader;
+  background: #fff0f0;
+  color: #c0392b;
+}
+/* З6-6: green header when dept is fully staffed */
+.classHeaderComplete {
+  composes: classHeader;
+  background: #eafaf1;
+  color: #1e8449;
+}
+
+.classTotal {
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+  margin-top: 2px;
+}
+.classTotalOver { color: #c0392b; font-weight: 600; }
+
+.teacherCell {
+  white-space: nowrap;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #fff;
+}
+/* З6-12: hover on any cell highlights the teacher name cell */
+tr:hover .teacherCell { background: #f5f5ff; }
+
+.teacherName { font-size: 13px; }
+
+.allClassesBtn {
+  display: block;
+  margin-top: 3px;
+  padding: 2px 7px;
+  font-size: 11px;
+  background: #eef2ff;
+  border: 1px solid #c5cef8;
+  border-radius: 4px;
+  color: #3a4eaa;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.allClassesBtn:hover { background: #d8e0ff; border-color: #3a4eaa; }
+
+/* З10-2: workload cell; З11-6: 4-line wrap instead of ellipsis; З13-2: max-width 120→144 */
+.workloadCell {
+  position: sticky;
+  left: 160px;
+  z-index: 1;
+  background: #fff;
+  font-size: 11px;
+  color: #555;
+  white-space: pre-wrap;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  max-width: 144px;
+}
+
+/* З6-11: dept total cell (Итого предмет) — left updated for З13-2 */
+.deptTotalCell {
+  text-align: center;
+  color: #555;
+  position: sticky;
+  left: 304px;
+  z-index: 1;
+  background: #fff;
+}
+/* З6-11: all-total cell (Всего у учителя) — left updated for З13-2 */
+.allTotalCell {
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+  position: sticky;
+  left: 359px;
+  z-index: 1;
+  background: #fff;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+}
+.totalOver { color: #c0392b; }
+
+.emptyCell {
+  text-align: center;
+  color: #ccc;
+  font-size: 12px;
+}
+
+.assignCell {
+  cursor: pointer;
+  position: relative;
+  min-width: 90px;
+  vertical-align: middle;
+  padding: 5px 6px;
+}
+.assignCell:hover { background: #f5f5ff; }
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chip {
+  background: #e8eaf6;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.chipHours { color: #666; }
+
+.plusBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #555;
+  font-size: 16px;
+  margin: 0 auto;
+}
+.assignCell:hover .plusBtn { background: #c5cae9; }
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  padding: 8px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdownRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.dropdownRow:hover { background: #f5f5ff; }
+
+.dropdownHours { margin-left: auto; color: #888; font-size: 12px; }
+.dropdownRowBlocked { opacity: 0.5; cursor: not-allowed; }
+.dropdownBlocked { font-size: 11px; color: #c0392b; margin-left: 4px; }
+
+.groupCountBtn {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 1px 6px;
+  font-size: 11px;
+  border-radius: 10px;
+  border: 1px solid #aaa;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 600;
+}
+.groupCountOne {
+  background: #fff3e0;
+  color: #e65100;
+  border-color: #e65100;
+}
+.groupCountOne:hover { background: #ffe0b2; }
+
+/* ── Dept stats row (З3-10) ─────────────────────────── */
+.deptStatsRow { background: #f0f4ff; }
+.deptStatsLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.deptStatCell {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+.deptStatComplete { color: #1e8449; font-weight: 600; }
+
+/* ── Unassigned row (З3-11) ─────────────────────────── */
+.unassignedRow { background: #fffbf0; }
+.unassignedLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.unassignedCell {
+  text-align: center;
+  font-size: 12px;
+  color: #bbb;
+}
+.unassignedNonZero { color: #c0392b; font-weight: 600; }
+
+.closeDropdown {
+  margin-top: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f5f5f5;
+  align-self: flex-end;
+}
+
+/* З6-8: bothGroups toggle button */
+.bothGroupsBtn {
+  margin-left: auto;
+  padding: 1px 6px;
+  font-size: 11px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  background: #f5f5f5;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bothGroupsBtn:hover { background: #e8f5e9; border-color: #2e7d32; color: #2e7d32; }
+.bothGroupsBtnActive {
+  background: #e8f5e9;
+  border-color: #2e7d32;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* З6-8: chip style when bothGroups=true */
+.chipBothGroups {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+}
+
+/* З6-9: group name display and editor */
+.groupNames {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 4px 24px;
+  font-size: 11px;
+  color: #888;
+}
+.groupNameTag {
+  background: #f0f4ff;
+  border-radius: 3px;
+  padding: 1px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+.groupNameSep { color: #ccc; }
+.groupNameEditBtn {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+.groupNameEditBtn:hover { color: #555; }
+
+.groupNameEditor {
+  padding: 4px 6px 4px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.groupNameInput {
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  width: 100%;
+}
+.groupNameInput:focus { outline: none; border-color: #1a1a2e; }
+.groupNameActions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+.groupNameSaveBtn {
+  padding: 2px 8px;
+  font-size: 11px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.groupNameSaveBtn:hover { background: #2a2a4e; }
+.groupNameCancelBtn {
+  padding: 2px 8px;
+  font-size: 11px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ── З7-3: stacked DeptTable sections ──────────────────────────────────────── */
+
+.tablesStack {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.tableNav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: -16px;
+}
+
+.tableNavLink {
+  font-size: 13px;
+  color: #1a1a2e;
+  text-decoration: none;
+  padding: 3px 10px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #f5f5f5;
+}
+.tableNavLink:hover { background: #eee; }
+
+.tableSection { }
+
+.tableSectionHeading {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #e8e8f0;
+}
