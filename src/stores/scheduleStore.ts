@@ -472,6 +472,7 @@ export const useScheduleStore = create<ScheduleState>()(
     // Create new empty schedule
     newSchedule: (type, mondayDate, baseTemplateId, baseTemplateSchedule, daysPerWeek) => {
       if (useDataStore.getState().isReadOnlyYear) return;
+      const initialEntry = createHistoryEntry('import', 'Начало', {}, []);
       set({
         schedule: {},
         versionId: null,
@@ -480,8 +481,8 @@ export const useScheduleStore = create<ScheduleState>()(
         mondayDate: mondayDate ?? null,
         versionDaysPerWeek: daysPerWeek ?? null,
         isDirty: false,
-        history: [],
-        historyIndex: -1,
+        history: [initialEntry],
+        historyIndex: 0,
         substitutions: [],
         temporaryLessons: [],
         lessonStatuses: {},
