@@ -95,7 +95,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - run: npm ci
-      - run: npm run tauri:build
+      - run: npm run tauri:build -- --bundles nsis
 
       - name: Upload to release
         env:
