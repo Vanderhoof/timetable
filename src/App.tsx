@@ -47,17 +47,19 @@ export function App() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isDirty]);
 
-  // Tauri exe: intercept native window close — show a 3-button modal.
-  // Listener registered once; isDirtyRef used to avoid stale closure on re-registration.
+  // Tauri exe: the Rust backend intercepts CloseRequested, calls prevent_close(),
+  // then emits "tauri-close-requested" to JS. We listen here and either close
+  // immediately (no unsaved changes) or show the 3-button dialog.
   useEffect(() => {
     if (!('__TAURI_INTERNALS__' in window)) return;
     let unlisten: (() => void) | undefined;
-    import('@tauri-apps/api/window').then(({ getCurrentWindow }) => {
-      getCurrentWindow().onCloseRequested((e) => {
-        e.preventDefault();
+    Promise.all([
+      import('@tauri-apps/api/event'),
+      import('@tauri-apps/api/window'),
+    ]).then(([{ listen }, { getCurrentWindow }]) => {
+      listen('tauri-close-requested', async () => {
         if (!isDirtyRef.current) {
-          // No unsaved changes — close immediately
-          getCurrentWindow().destroy();
+          await getCurrentWindow().destroy();
         } else {
           setShowCloseDialog(true);
         }
