@@ -2,7 +2,7 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
 };
-use tauri::{Emitter, Manager, State};
+use tauri::{Manager, State};
 
 struct AppState {
     prevent_close: Arc<AtomicBool>,
@@ -14,6 +14,15 @@ struct AppState {
 fn confirm_and_exit(state: State<AppState>, app: tauri::AppHandle) {
     state.prevent_close.store(false, Ordering::SeqCst);
     app.exit(0);
+}
+
+/// Directly executes the JS close handler via eval — reliable alternative to events.
+fn notify_js_close(app_handle: &tauri::AppHandle) {
+    if let Some(window) = app_handle.get_webview_window("main") {
+        window
+            .eval("window.__tauriCloseRequested && window.__tauriCloseRequested()")
+            .ok();
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -32,7 +41,7 @@ pub fn run() {
                 if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                     if pc_for_window.load(Ordering::SeqCst) {
                         api.prevent_close();
-                        app_handle.emit("tauri-close-requested", ()).ok();
+                        notify_js_close(&app_handle);
                     }
                 }
             });
@@ -47,7 +56,7 @@ pub fn run() {
                 if let Some(state) = app_handle.try_state::<AppState>() {
                     if state.prevent_close.load(Ordering::SeqCst) {
                         api.prevent_exit();
-                        app_handle.emit("tauri-close-requested", ()).ok();
+                        notify_js_close(app_handle);
                     }
                 }
             }

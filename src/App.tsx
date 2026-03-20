@@ -48,24 +48,22 @@ export function App() {
   }, [isDirty]);
 
   // Tauri exe: the Rust backend intercepts CloseRequested and ExitRequested,
-  // calls prevent_close()/prevent_exit(), then emits "tauri-close-requested"
-  // via app_handle.emit() (global). We listen here and either exit immediately
-  // (no unsaved changes) or show the 3-button dialog.
+  // calls prevent_close()/prevent_exit(), then calls window.eval() to invoke
+  // window.__tauriCloseRequested() directly — bypasses event routing issues.
   useEffect(() => {
     if (!('__TAURI_INTERNALS__' in window)) return;
-    let unlisten: (() => void) | undefined;
-    // Use app-level listen() — matches app_handle.emit() from Rust (global event)
-    import('@tauri-apps/api/event').then(({ listen }) => {
-      listen('tauri-close-requested', async () => {
-        if (!isDirtyRef.current) {
-          const { invoke } = await import('@tauri-apps/api/core');
-          invoke('confirm_and_exit');
-        } else {
-          setShowCloseDialog(true);
-        }
-      }).then(fn => { unlisten = fn; });
-    });
-    return () => unlisten?.();
+
+    (window as unknown as Record<string, unknown>).__tauriCloseRequested = () => {
+      if (!isDirtyRef.current) {
+        import('@tauri-apps/api/core').then(({ invoke }) => invoke('confirm_and_exit'));
+      } else {
+        setShowCloseDialog(true);
+      }
+    };
+
+    return () => {
+      delete (window as unknown as Record<string, unknown>).__tauriCloseRequested;
+    };
   }, []); // register once; uses ref for isDirty
 
   // Close without saving
