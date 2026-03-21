@@ -2,6 +2,7 @@ import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '../store';
 import { parseUP } from '../logic/parseUP';
 import { createUPSnapshot } from '../logic/upSnapshot';
+import { applyGroupSplitToggle } from '../logic/planUtils';
 import { useToast } from '../hooks/useToast';
 import type { CurriculumPlan, SubjectRow } from '../types';
 import styles from './ImportPage.module.css';
@@ -180,19 +181,11 @@ export function ImportPage() {
   }
 
   // З3-3: toggle is live on both draft and confirmed plan; З11-2: scoped to specific part
-  function handleGroupSplitToggle(_grade: number, subjectName: string, part: SubjectRow['part']) {
+  function handleGroupSplitToggle(grade: number, subjectName: string, part: SubjectRow['part'], onlyThisGrade?: boolean) {
     const target = draft ?? curriculumPlan;
     if (!target) return;
     pushUndo(false, `деление на группы «${subjectName}»`);
-    const updated = {
-      ...target,
-      grades: target.grades.map((g) => ({
-        ...g,
-        subjects: g.subjects.map((s) =>
-          s.name !== subjectName || s.part !== part ? s : { ...s, groupSplit: !s.groupSplit },
-        ),
-      })),
-    };
+    const updated = applyGroupSplitToggle(target, grade, subjectName, part, !!onlyThisGrade);
     if (draft) setDraft(updated); else setCurriculumPlan(updated);
   }
 
@@ -469,7 +462,7 @@ interface PlanPreviewProps {
   readOnly?: boolean;
   onShortNameChange?: (grade: number, subjectName: string, value: string) => void;
   onPartChange?: (grade: number, subjectName: string, currentPart: SubjectRow['part'], newPart: SubjectRow['part']) => void;
-  onGroupSplitToggle?: (grade: number, subjectName: string, part: SubjectRow['part']) => void;
+  onGroupSplitToggle?: (grade: number, subjectName: string, part: SubjectRow['part'], onlyThisGrade?: boolean) => void;
   onHoursChange?: (grade: number, subjectName: string, part: SubjectRow['part'], className: string, value: number) => void;
   onSubjectAdd?: (grade: number, subjectName: string) => void;
   onSubjectDelete?: (grade: number, subjectName: string, part: SubjectRow['part']) => void;
@@ -525,7 +518,7 @@ interface GradeTableProps {
   readOnly?: boolean;
   onShortNameChange?: (grade: number, subjectName: string, value: string) => void;
   onPartChange?: (grade: number, subjectName: string, currentPart: SubjectRow['part'], newPart: SubjectRow['part']) => void;
-  onGroupSplitToggle?: (grade: number, subjectName: string, part: SubjectRow['part']) => void;
+  onGroupSplitToggle?: (grade: number, subjectName: string, part: SubjectRow['part'], onlyThisGrade?: boolean) => void;
   onHoursChange?: (grade: number, subjectName: string, part: SubjectRow['part'], className: string, value: number) => void;
   onSubjectAdd?: (grade: number, subjectName: string) => void;
   onSubjectDelete?: (grade: number, subjectName: string, part: SubjectRow['part']) => void;
@@ -675,11 +668,22 @@ function GradeTable({
                   {readOnly ? (
                     s.groupSplit ? '✓' : ''
                   ) : (
-                    <input
-                      type="checkbox"
-                      checked={s.groupSplit}
-                      onChange={() => onGroupSplitToggle?.(grade, s.name, s.part)}
-                    />
+                    <div className={styles.groupSplitCell}>
+                      <input
+                        type="checkbox"
+                        checked={s.groupSplit}
+                        onChange={() => onGroupSplitToggle?.(grade, s.name, s.part)}
+                        title="Применить ко всем параллелям"
+                      />
+                      <button
+                        className={styles.onlyThisGradeBtn}
+                        onClick={() => onGroupSplitToggle?.(grade, s.name, s.part, true)}
+                        title="Изменить только в этой параллели"
+                        type="button"
+                      >
+                        только эту
+                      </button>
+                    </div>
                   )}
                 </td>
                 <td className={styles.partCell}>
