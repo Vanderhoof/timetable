@@ -7,7 +7,6 @@
     "core:default",
     "opener:default",
     "dialog:allow-save",
-    "fs:allow-write-text-file",
-    "fs:allow-write-text-file-scoped"
+    "fs:allow-write-text-file"
   ]
 }
